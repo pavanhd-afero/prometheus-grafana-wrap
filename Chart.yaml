@@ -1,0 +1,10 @@
+apiVersion: v2
+name: kube-prometheus-stack-wrap
+description: "Setup kube-prometheus-stack and related objects"
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+dependencies:
+  - name: kube-prometheus-stack
+    repository: https://github.com/pavanhd-afero/helm-charts1.git
+    version: 36.2.0
