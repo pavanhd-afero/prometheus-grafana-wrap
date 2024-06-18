@@ -16,4 +16,4 @@ data:
         options:
           path: /var/lib/grafana/dashboards
   dashboard1.json: |-
-{{ .Files.Get "files/dashboards/.json" | indent 4 }}
+{{ .Files.Get "dashboards/dashboard1.json" | indent 4 }}
