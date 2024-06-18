@@ -1,0 +1,1393 @@
+
+where can i mention in whcih folder should dashboard to be created in grafana? if im deplpoying those dashboards via helm charts?
+
+ChatGPT
+When deploying Grafana dashboards via Helm charts, you can specify the folder in which the dashboard should be created by using the appropriate annotations in your dashboard definition. This is done by setting the grafana_folder annotation in the dashboard JSON or YAML file. Here's how you can do it:
+
+Annotate the Dashboard Definition: In your dashboard JSON or YAML file, add the grafana_folder annotation. For example:
+
+json
+Copy code
+{
+  "annotations": {
+    "grafana_folder": "My Custom Folder"
+  },
+  "title": "My Dashboard",
+  "panels": [
+    // Your panels here
+  ]
+}
+Or in YAML format:
+
+yaml
+Copy code
+annotations:
+  grafana_folder: "My Custom Folder"
+title: "My Dashboard"
+panels:
+  # Your panels here
+Include the Dashboard in Helm Chart: Ensure that your Helm chart includes the dashboard file with the correct annotations. The Helm chart template might look like this:
+
+yaml
+Copy code
+apiVersion: 1
+description: A Helm chart for deploying Grafana dashboards
+name: my-grafana-dashboards
+version: 0.1.0
+
+files:
+  - dashboards/my-dashboard.json
+And in your values file, you might have:
+
+yaml
+Copy code
+dashboards:
+  my-dashboard:
+    json: |
+      {
+        "annotations": {
+          "grafana_folder": "My Custom Folder"
+        },
+        "title": "My Dashboard",
+        "panels": [
+          // Your panels here
+        ]
+      }
+Deploy the Helm Chart: When you deploy the Helm chart, it will place the dashboard in the specified folder within Grafana.
+
+Grafana Configuration: Ensure that your Grafana instance is configured to load dashboards from the specified directory. This can usually be done by configuring the dashboards section in the Grafana values file. For example:
+
+yaml
+Copy code
+grafana:
+  dashboards:
+    enabled: true
+    provider:
+      name: my-dashboards
+      orgId: 1
+      folder: "My Custom Folder"
+      type: file
+      options:
+        path: /var/lib/grafana/dashboards
+This approach ensures that when Grafana loads the dashboard, it places it in the folder specified by the grafana_folder annotation.
+
+where i can mention here
+{
+"annotations": {
+"list": [
+{
+"builtIn": 1,
+"datasource": {
+"type": "grafana",
+"uid": "-- Grafana --"
+},
+"enable": true,
+"hide": true,
+"iconColor": "rgba(0, 211, 255, 1)",
+"name": "Annotations & Alerts",
+"type": "dashboard"
+}
+]
+},
+"editable": true,
+"fiscalYearStartMonth": 0,
+"graphTooltip": 0,
+"id": 1541,
+"links": [],
+"liveNow": false,
+"panels": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "prometheus"
+},
+"description": "this dashboard gives different kind of http_request_rates that each application recieves. Where "throughput" gives total number of requests per minute for that application,5xx & 4xx are http_error_rates and 2xx gives us successful http_requests_rate.\n**NOTE:- Click on DataLinks to open dedicated dashboards for each services.",
+"fieldConfig": {
+"defaults": {
+"color": {
+"mode": "thresholds"
+},
+"custom": {
+"align": "auto",
+"cellOptions": {
+"type": "color-text"
+},
+"inspect": false
+},
+"mappings": [],
+"noValue": "N/A",
+"thresholds": {
+"mode": "percentage",
+"steps": [
+{
+"color": "green",
+"value": null
+}
+]
+},
+"unit": "opm"
+},
+"overrides": [
+{
+"matcher": {
+"id": "byName",
+"options": "Error %"
+},
+"properties": [
+{
+"id": "unit",
+"value": "percent"
+}
+]
+},
+{
+"matcher": {
+"id": "byName",
+"options": "application_name"
+},
+"properties": [
+{
+"id": "links",
+"value": [
+{
+"targetBlank": true,
+"title": "ota-updatecheck-processor",
+"url": "http://${url_prefix}.afero-inc.sdm.network/d/o837n2yt4cno7ym3dxo3479gdhxmgxh/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "channel-manager",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/sN5x2TT7z/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "clientmessenger",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/bd04d070975d11eda8fc0242ac120002/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "conclave",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/c344b8bd6cdb4f0585096b34fb9a39e0/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "conclave-token-issuer",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/45v7nhtgowcn4gh4oh7mx20457yg5/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "connectivity-device-compute",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/SeF4jo_7z/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "connectivity-device-conclave",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/3v7nt4woawcny7ow34/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "connectivity-device-store",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/y972v3y7n982c35t7n8gc23/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "device-event-google-home",
+"url": "http://${url_prefix}.afero-inc.sdm.network﻿/d/982ycno8t7542omgyo25dty/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "semantics-api",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/D3GJNX84z/${__field.name}"
+},
+{
+"targetBlank": true,
+"title": "semantics-data",
+"url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/8i734y7n83t2cn7yoc3o7nhmtg3v4ty/${__field.name}"
+}
+]
+}
+]
+}
+]
+},
+"gridPos": {
+"h": 13,
+"w": 19,
+"x": 0,
+"y": 0
+},
+"id": 1,
+"options": {
+"cellHeight": "sm",
+"footer": {
+"countRows": false,
+"fields": "",
+"reducer": [
+"sum"
+],
+"show": false
+},
+"showHeader": true,
+"sortBy": []
+},
+"pluginVersion": "10.1.9",
+"targets": [
+{
+"datasource": {
+"type": "prometheus",
+"uid": "prometheus"
+},
+"editorMode": "code",
+"exemplar": false,
+"expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name="$application_name", uri!="/liveness", uri!="/readiness"}[$__range])))*60",
+"format": "table",
+"instant": true,
+"legendFormat": "__auto",
+"range": false,
+"refId": "http_requests_rate"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "prometheus"
+},
+"editorMode": "code",
+"exemplar": false,
+"expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name="$application_name", uri!="/liveness", uri!="/readiness", status="5.."}[$__range])))*60",
+"format": "table",
+"hide": false,
+"instant": true,
+"legendFormat": "__auto",
+"range": false,
+"refId": "5xx errors rate"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "prometheus"
+},
+"editorMode": "code",
+"exemplar": false,
+"expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name="$application_name", uri!="/liveness", uri!="/readiness", status="4.."}[$__range])))*60",
+"format": "table",
+"hide": false,
+"instant": true,
+"legendFormat": "__auto",
+"range": false,
+"refId": "4xx errors rate"
+},
+{
+"datasource": {
+"type": "prometheus",
+"uid": "prometheus"
+},
+"editorMode": "code",
+"exemplar": false,
+"expr": "100 -(((sum by(application_name) (increase(http_server_requests_seconds_count{application_name="$application_name", uri!="/liveness", uri!="/readiness", status="2.."}[$__range])))/(sum by(application_name) (increase(http_server_requests_seconds_count{application_name="$application_name", uri!="/liveness", uri!="/readiness"}[$__range]))))*100)",
+"format": "table",
+"hide": false,
+"instant": true,
+"legendFormat": "__auto",
+"range": false,
+"refId": "2xx requests rate"
+}
+],
+"title": "service-health",
+"transformations": [
+{
+"id": "joinByField",
+"options": {
+"byField": "application_name",
+"mode": "outer"
+}
+},
+{
+"id": "filterFieldsByName",
+"options": {
+"include": {
+"names": [
+"application_name",
+"Value #http_requests_rate",
+"Value #5xx errors rate",
+"Value #4xx errors rate",
+"Value #2xx requests rate"
+]
+}
+}
+},
+{
+"id": "organize",
+"options": {
+"excludeByName": {},
+"indexByName": {},
+"renameByName": {
+"Value #2xx requests": "2xx Requests Rate",
+"Value #2xx requests rate": "Error %",
+"Value #4xx errors": "4xx Errors Rate",
+"Value #4xx errors rate": "4xx error rate",
+"Value #5xx errors": "5xx Errors Rate",
+"Value #5xx errors rate": "5xx error rate",
+"Value #http_requests_rate": "throughput(http_requests_rate_per_min)",
+"application_name": "Application Name"
+}
+}
+}
+],
+"type": "table"
+}
+],
+"refresh": "",
+"schemaVersion": 38,
+"style": "dark",
+"tags": [],
+"templating": {
+"list": [
+{
+"hide": 2,
+"label": "$application_name",
+"name": "application_name",
+"query": "ota-updatecheck-processor|channel-manager|clientmessenger|conclave|conclave-token-issuer|connectivity-device-compute|connectivity-device-conclave|connectivity-device-store|device-event-google-home|semantics-api|semantics-data",
+"skipUrlSync": false,
+"type": "constant"
+},
+{
+"current": {
+"selected": true,
+"text": "o837n2yt4cno7ym3dxo3479gdhxmgxh",
+"value": "o837n2yt4cno7ym3dxo3479gdhxmgxh"
+},
+"hide": 2,
+"includeAll": true,
+"label": "$dashboard_uid",
+"multi": false,
+"name": "dashboard_uid",
+"options": [
+{
+"selected": false,
+"text": "All",
+"value": "$__all"
+},
+{
+"selected": true,
+"text": "o837n2yt4cno7ym3dxo3479gdhxmgxh",
+"value": "o837n2yt4cno7ym3dxo3479gdhxmgxh"
+},
+{
+"selected": false,
+"text": "sN5x2TT7z",
+"value": "sN5x2TT7z"
+},
+{
+"selected": false,
+"text": "bd04d070975d11eda8fc0242ac120002",
+"value": "bd04d070975d11eda8fc0242ac120002"
+},
+{
+"selected": false,
+"text": "c344b8bd6cdb4f0585096b34fb9a39e0",
+"value": "c344b8bd6cdb4f0585096b34fb9a39e0"
+},
+{
+"selected": false,
+"text": "45v7nhtgowcn4gh4oh7mx20457yg5",
+"value": "45v7nhtgowcn4gh4oh7mx20457yg5"
+},
+{
+"selected": false,
+"text": "SeF4jo_7z",
+"value": "SeF4jo_7z"
+},
+{
+"selected": false,
+"text": "3v7nt4woawcny7ow34",
+"value": "3v7nt4woawcny7ow34"
+},
+{
+"selected": false,
+"text": "y972v3y7n982c35t7n8gc23",
+"value": "y972v3y7n982c35t7n8gc23"
+},
+{
+"selected": false,
+"text": "982ycno8t7542omgyo25dty",
+"value": "982ycno8t7542omgyo25dty"
+},
+{
+"selected": false,
+"text": "D3GJNX84z",
+"value": "D3GJNX84z"
+},
+{
+"selected": false,
+"text": "8i734y7n83t2cn7yoc3o7nhmtg3v4ty",
+"value": "8i734y7n83t2cn7yoc3o7nhmtg3v4ty"
+}
+],
+"query": "o837n2yt4cno7ym3dxo3479gdhxmgxh,sN5x2TT7z,bd04d070975d11eda8fc0242ac120002,c344b8bd6cdb4f0585096b34fb9a39e0,45v7nhtgowcn4gh4oh7mx20457yg5,SeF4jo_7z,3v7nt4woawcny7ow34,y972v3y7n982c35t7n8gc23,982ycno8t7542omgyo25dty,D3GJNX84z,8i734y7n83t2cn7yoc3o7nhmtg3v4ty",
+"queryValue": "",
+"skipUrlSync": false,
+"type": "custom"
+},
+{
+"current": {
+"selected": true,
+"text": "grafana-afero-dev",
+"value": "grafana-afero-dev"
+},
+"hide": 0,
+"includeAll": false,
+"label": "$url_prefix",
+"multi": false,
+"name": "url_prefix",
+"options": [
+{
+"selected": true,
+"text": "grafana-afero-dev",
+"value": "grafana-afero-dev"
+},
+{
+"selected": false,
+"text": "grafana-afero-staging-usw1",
+"value": "grafana-afero-staging-usw1"
+},
+{
+"selected": false,
+"text": "grafana-afero-prod",
+"value": "grafana-afero-prod"
+}
+],
+"query": "grafana-afero-dev,grafana-afero-staging-usw1,grafana-afero-prod",
+"queryValue": "",
+"skipUrlSync": false,
+"type": "custom"
+}
+]
+},
+"time": {
+"from": "now-6h",
+"to": "now"
+},
+"timepicker": {},
+"timezone": "",
+"title": "service health dashboard-test",
+"uid": "b203c814-54af-4524-9cf5-d993735362e0",
+"version": 21,
+"weekStart": ""
+}
+
+ChatGPT
+To specify the folder in which the Grafana dashboard should be created when deploying via Helm charts, you need to add the grafana_folder annotation at the top level of your dashboard JSON or YAML file. This annotation should be outside of the annotations object that is already present. Here's how you can do it:
+
+JSON Format
+Add the grafana_folder annotation at the top level:
+
+json
+Copy code
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "grafana_folder": "My Custom Folder",
+  "graphTooltip": 0,
+  "id": 1541,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "this dashboard gives different kind of http_request_rates that each application recieves. Where \"throughput\" gives total number of requests per minute for that application,5xx & 4xx are http_error_rates and 2xx gives us successful http_requests_rate.\n**NOTE:- Click on DataLinks to open dedicated dashboards for each services.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "N/A",
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "opm"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error %"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "application_name"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "ota-updatecheck-processor",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/o837n2yt4cno7ym3dxo3479gdhxmgxh/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "channel-manager",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/sN5x2TT7z/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "clientmessenger",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/bd04d070975d11eda8fc0242ac120002/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "conclave",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/c344b8bd6cdb4f0585096b34fb9a39e0/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "conclave-token-issuer",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/45v7nhtgowcn4gh4oh7mx20457yg5/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "connectivity-device-compute",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/SeF4jo_7z/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "connectivity-device-conclave",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/3v7nt4woawcny7ow34/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "connectivity-device-store",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/y972v3y7n982c35t7n8gc23/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "device-event-google-home",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/982ycno8t7542omgyo25dty/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "semantics-api",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/D3GJNX84z/${__field.name}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "semantics-data",
+                    "url": "http://${url_prefix}.afero-inc.sdm.network/d/8i734y7n83t2cn7yoc3o7nhmtg3v4ty/${__field.name}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 19,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.1.9",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\"}[$__range])))*60",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "http_requests_rate"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\", status=~\"5..\"}[$__range])))*60",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "5xx errors rate"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\", status=~\"4..\"}[$__range])))*60",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "4xx errors rate"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "100 -(((sum by(application_name) (increase(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\", status=~\"2..\"}[$__range])))/(sum by(application_name) (increase(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\"}[$__range]))))*100)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "2xx requests rate"
+        }
+      ],
+      "title": "service-health",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "application_name",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+should there be a folder already present to add this floder changes?
+
+ChatGPT
+In Grafana, if you want to add a dashboard to a specific folder, that folder should already exist. If it doesn't, you need to create it first. You can add a dashboard to a folder by specifying the folder's UID when you create or update the dashboard.
+
+Here's how to do it:
+
+Create the folder (if it doesn't exist): You can create a folder using the Grafana UI or the Grafana API.
+
+Using the Grafana UI:
+
+Go to the Grafana homepage.
+Click on "Create" (plus icon) in the sidebar.
+Select "Folder".
+Provide a name for the folder and click "Save".
+Using the Grafana API:
+
+Send a POST request to the /api/folders endpoint with the folder's name and optionally a unique identifier (UID).
+Example API request:
+
+sh
+Copy code
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer YOUR_API_KEY" -d '{
+  "title": "My Folder",
+  "uid": "my-folder"
+}' http://localhost:3000/api/folders
+Add or update the dashboard with the folder UID: When creating or updating a dashboard, include the folderId field in your request.
+
+Example JSON with folder UID:
+
+json
+Copy code
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 1541,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "description": "this dashboard gives different kind of http_request_rates that each application recieves. Where \"throughput\" gives total number of requests per minute for that application,5xx & 4xx are http_error_rates and 2xx gives us successful http_requests_rate.\n**NOTE:- Click on DataLinks to open dedicated dashboards for each services.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "color-text"
+              },
+              "inspect": false
+            },
+            "mappings": [],
+            "noValue": "N/A",
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "opm"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Error %"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "percent"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "application_name"
+              },
+              "properties": [
+                {
+                  "id": "links",
+                  "value": [
+                    {
+                      "targetBlank": true,
+                      "title": "ota-updatecheck-processor",
+                      "url": "http://${url_prefix}.afero-inc.sdm.network/d/o837n2yt4cno7ym3dxo3479gdhxmgxh/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "channel-manager",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/sN5x2TT7z/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "clientmessenger",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/bd04d070975d11eda8fc0242ac120002/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "conclave",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/c344b8bd6cdb4f0585096b34fb9a39e0/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "conclave-token-issuer",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/45v7nhtgowcn4gh4oh7mx20457yg5/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "connectivity-device-compute",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/SeF4jo_7z/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "connectivity-device-conclave",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/3v7nt4woawcny7ow34/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "connectivity-device-store",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/y972v3y7n982c35t7n8gc23/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "device-event-google-home",
+                      "url": "http://${url_prefix}.afero-inc.sdm.network﻿/d/982ycno8t7542omgyo25dty/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "semantics-api",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/D3GJNX84z/${__field.name}"
+                    },
+                    {
+                      "targetBlank": true,
+                      "title": "semantics-data",
+                      "url": "http://${url_prefix}﻿.afero-inc.sdm.network/d/8i734y7n83t2cn7yoc3o7nhmtg3v4ty/${__field.name}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 13,
+          "w": 19,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true,
+          "sortBy": []
+        },
+        "pluginVersion": "10.1.9",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\"}[$__range])))*60",
+            "format": "table",
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "http_requests_rate"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\", status=~\"5..\"}[$__range])))*60",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "5xx errors rate"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\", status=~\"4..\"}[$__range])))*60",
+            "format": "table",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "4xx errors rate"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "100 -(((sum by(application_name) (increase(http_server_requests
+or can i mention in configmap?
+{{- $currentScope := . -}}
+{{- range $path, $_ := .Files.Glob "files/dashboards/.json" }}
+{{- $title := (regexReplaceAll "^./([^/]+).json$" $path "${1}") }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+name: grafana-dashboard-{{ include "conclave.fullname" $currentScope }}-{{ $title }}
+labels:
+grafana_dashboard: "1"
+data:
+{{ include "conclave.fullname" $currentScope }}-{{ $title }}.json: |
+{{- with $currentScope }}
+{{- .Files.Get $path | nindent 4 }}
+{{- end }}
+{{- end }}
+
+
+2/2
+
+ChatGPT
+Yes, you can specify the folder for your dashboards in a ConfigMap when deploying them to Grafana. However, ConfigMaps themselves don't directly support folder assignment. You can, however, use a provisioning configuration to ensure that the dashboards are placed in the correct folder.
+
+Here's an example of how you can set up your ConfigMap to provision dashboards in a specific folder:
+
+Create the provisioning configuration for the dashboards:
+
+This configuration should specify the folder and dashboards to be loaded from the ConfigMap.
+Update your ConfigMap to include both the provisioning configuration and the dashboards.
+
+Here is an example structure for the provisioning configuration and the ConfigMap:
+
+Provisioning Configuration
+Create a file named dashboard_provisioning.yaml:
+
+yaml
+Copy code
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    folder: 'MyFolder'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
+ConfigMap
+yaml
+Copy code
+{{- $currentScope := . -}}
+{{- range $path, $_ := .Files.Glob "files/dashboards/*.json" }}
+  {{- $title := (regexReplaceAll "^.*/([^/]+).json$" $path "${1}") }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-{{ include "conclave.fullname" $currentScope }}-{{ $title }}
+  labels:
+    grafana_dashboard: "1"
+data:
+  {{ include "conclave.fullname" $currentScope }}-{{ $title }}.json: |
+    {{- .Files.Get $path | nindent 4 }}
+  dashboard_provisioning.yaml: |
+    apiVersion: 1
+
+    providers:
+      - name: 'default'
+        folder: 'MyFolder'
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards
+{{- end }}
+Deployment YAML
+Mount the ConfigMap and specify the provisioning path in your Grafana deployment:
+
+yaml
+Copy code
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          volumeMounts:
+            - name: grafana-dashboards
+              mountPath: /var/lib/grafana/dashboards
+            - name: grafana-provisioning
+              mountPath: /etc/grafana/provisioning/dashboards
+      volumes:
+        - name: grafana-dashboards
+          configMap:
+            name: grafana-dashboard-{{ include "conclave.fullname" $currentScope }}-{{ $title }}
+            items:
+              - key: {{ include "conclave.fullname" $currentScope }}-{{ $title }}.json
+                path: {{ $title }}.json
+        - name: grafana-provisioning
+          configMap:
+            name: grafana-dashboard-{{ include "conclave.fullname" $currentScope }}-{{ $title }}
+            items:
+              - key: dashboard_provisioning.yaml
+                path: dashboard_provisioning.yaml
+In this setup:
+
+The ConfigMap contains the dashboard JSON files and the provisioning configuration.
+The provisioning configuration specifies that dashboards should be loaded from the /var/lib/grafana/dashboards directory and placed in the MyFolder folder.
+The Grafana container mounts the ConfigMap at the appropriate paths.
+This way, your dashboards will be correctly placed in the specified folder when Grafana starts up.
+
+have they mentioned folder here?
+{
+"__inputs": [
+{
+"name": "DS_CONTAINERS",
+"label": "Containers",
+"description": "",
+"type": "datasource",
+"pluginId": "influxdb",
+"pluginName": "InfluxDB"
+},
+{
+"name": "DS_INSTANCES",
+"label": "Instances",
+"description": "",
+"type": "datasource",
+"pluginId": "influxdb",
+"pluginName": "InfluxDB"
+}
+],
+"__requires": [
+{
+"type": "grafana",
+"id": "grafana",
+"name": "Grafana",
+"version": "5.0.4"
+},
+{
+"type": "panel",
+"id": "graph",
+"name": "Graph",
+"version": "5.0.0"
+},
+{
+"type": "datasource",
+"id": "influxdb",
+"name": "InfluxDB",
+"version": "5.0.0"
+}
+],
+"annotations": {
+"list": [
+{
+"builtIn": 1,
+"datasource": "-- Grafana --",
+"enable": true,
+"hide": true,
+"iconColor": "rgba(0, 211, 255, 1)",
+"name": "Annotations & Alerts",
+"type": "dashboard"
+}
+]
+},
+"editable": true,
+"gnetId": null,
+"graphTooltip": 0,
+"id": null,
+"iteration": 1541268167585,
+"links": [],
+"panels": [
+{
+"aliasColors": {},
+"bars": false,
+"dashLength": 10,
+"dashes": false,
+"datasource": "${DS_CONTAINERS}",
+"fill": 1,
+"gridPos": {
+"h": 9,
+"w": 12,
+"x": 0,
+"y": 0
+},
+"id": 8,
+"legend": {
+"avg": false,
+"current": false,
+"max": false,
+"min": false,
+"show": true,
+"total": false,
+"values": false
+},
+"lines": true,
+"linewidth": 1,
+"links": [],
+"nullPointMode": "null",
+"percentage": false,
+"pointradius": 5,
+"points": false,
+"renderer": "flot",
+"seriesOverrides": [],
+"spaceLength": 10,
+"stack": false,
+"steppedLine": false,
+"targets": [
+{
+"alias": "[[tag_container_name]]",
+"groupBy": [
+{
+"params": [
+"$__interval"
+],
+"type": "time"
+},
+{
+"params": [
+"container_name"
+],
+"type": "tag"
+},
+{
+"params": [
+"null"
+],
+"type": "fill"
+}
+],
+"measurement": "docker_container_mem_docker",
+"orderByTime": "ASC",
+"policy": "default",
+"refId": "A",
+"resultFormat": "time_series",
+"select": [
+[
+{
+"params": [
+"usage_percent"
+],
+"type": "field"
+},
+{
+"params": [],
+"type": "mean"
+}
+]
+],
+"tags": [
+{
+"key": "host",
+"operator": "=~",
+"value": "/^$Host$/"
+},
+{
+"condition": "AND",
+"key": "hostname",
+"operator": "=",
+"value": "Slaves"
+}
+]
+}
+],
+"thresholds": [],
+"timeFrom": null,
+"timeShift": null,
+"title": "Build Jobs",
+"tooltip": {
+"shared": true,
+"sort": 0,
+"value_type": "individual"
+},
+"type": "graph",
+"xaxis": {
+"buckets": null,
+"mode": "time",
+"name": null,
+"show": true,
+"values": []
+},
+"yaxes": [
+{
+"format": "decbytes",
+"label": null,
+"logBase": 1,
+"max": null,
+"min": null,
+"show": true
+},
+{
+"format": "short",
+"label": null,
+"logBase": 1,
+"max": null,
+"min": null,
+"show": true
+}
+]
+},
+{
+"aliasColors": {},
+"bars": false,
+"dashLength": 10,
+"dashes": false,
+"datasource": "${DS_INSTANCES}",
+"fill": 1,
+"gridPos": {
+"h": 9,
+"w": 12,
+"x": 12,
+"y": 0
+},
+"id": 4,
+"legend": {
+"avg": false,
+"current": false,
+"max": false,
+"min": false,
+"show": true,
+"total": false,
+"values": false
+},
+"lines": true,
+"linewidth": 1,
+"links": [],
+"nullPointMode": "null",
+"percentage": false,
+"pointradius": 5,
+"points": false,
+"renderer": "flot",
+"seriesOverrides": [],
+"spaceLength": 10,
+"stack": false,
+"steppedLine": false,
+"targets": [
+{
+"alias": "Usage",
+"groupBy": [
+{
+"params": [
+"$__interval"
+],
+"type": "time"
+},
+{
+"params": [
+"null"
+],
+"type": "fill"
+}
+],
+"measurement": "mem_vm",
+"orderByTime": "ASC",
+"policy": "default",
+"refId": "A",
+"resultFormat": "time_series",
+"select": [
+[
+{
+"params": [
+"used_percent"
+],
+"type": "field"
+},
+{
+"params": [],
+"type": "mean"
+}
+]
+],
+
+
+2/2
+
+ChatGPT
+In the provided JSON snippet, there is no direct reference to a "folder" where the dashboard should be placed in Grafana. The configuration primarily defines the panels, data sources, and other settings for the dashboard itself. To specify the folder for dashboards in Grafana, you need to use the provisioning mechanism in Grafana, which is managed outside the dashboard JSON files.
+
+Provisioning Dashboards to a Specific Folder
+To assign dashboards to a specific folder, you need to use Grafana's provisioning configuration. This is done in a separate YAML file that Grafana reads on startup.
+
+Here is a step-by-step guide on how to set this up:
+
+Create a Provisioning Configuration File:
+
+Create a YAML file for the provisioning configuration. This file will specify the folder and the path where the dashboards are located.
+yaml
+Copy code
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    folder: 'MyFolder'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
+Create a ConfigMap for the Provisioning File and Dashboards:
+
+Create a Kubernetes ConfigMap that includes both the dashboards and the provisioning configuration.
+yaml
+Copy code
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  labels:
+    grafana_dashboard: "1"
+data:
+  dashboard_provisioning.yaml: |
+    apiVersion: 1
+    providers:
+      - name: 'default'
+        folder: 'MyFolder'
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards
+  dashboard1.json: |-
+{{ .Files.Get "files/dashboards/dashboard1.json" | indent 4 }}
