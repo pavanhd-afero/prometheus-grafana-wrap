@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 data:
   dashboard1.json: |-
-{{ .Files.Get "dashboards/dashboard1.json" | indent 4 }}
+{{ .Files.Get "prometheus-grafana-wrap/dashboards/dashboard1.json" | indent 4 }}
   provider.yaml: |-
   :::
     apiVersion: 1
