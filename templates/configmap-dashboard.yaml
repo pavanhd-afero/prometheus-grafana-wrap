@@ -4,16 +4,21 @@ metadata:
   name: grafana-dashboards
   namespace: monitoring
 data:
-  provider.yaml: |
-    apiVersion: 1
-    providers:
-    - name: 'default'
-      orgId: 1
-      folder: 'my-folder'
-      type: 'file'
-      disableDeletion: false
-      editable: true
-      options:
-        path: /var/lib/grafana/dashboards
   dashboard1.json: |-
 {{ .Files.Get "dashboards/dashboard1.json" | indent 4 }}
+  provider.yaml: |-
+  :::
+    apiVersion: 1
+
+    providers:
+      - name: 'a unique provider name'
+        orgId: 1
+        folder: 'Infra-Dashboards'  # Name of the folder in Grafana
+        folderUid: ''  # Folder UID, leave empty to auto-generate
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        allowUiUpdates: false
+        options:
+          path: /var/lib/grafana/dashboards
+          foldersFromFilesStructure: true

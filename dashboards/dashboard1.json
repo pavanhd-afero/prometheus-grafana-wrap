@@ -11,6 +11,12 @@
           "hide": true,
           "iconColor": "rgba(0, 211, 255, 1)",
           "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
           "type": "dashboard"
         }
       ]
@@ -18,197 +24,120 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 1541,
+    "id": 27,
     "links": [],
     "liveNow": false,
     "panels": [
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
+          "type": "datasource",
+          "uid": "grafana"
         },
-        "description": "this dashboard gives different kind of http_request_rates that each application recieves. Where \"throughput\" gives total number of requests per minute for that application,5xx & 4xx are http_error_rates and 2xx gives us successful http_requests_rate.",
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "thresholds"
+              "mode": "palette-classic"
             },
             "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "color-text"
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
               },
-              "inspect": false
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
             },
             "mappings": [],
-            "noValue": "N/A",
             "thresholds": {
-              "mode": "percentage",
+              "mode": "absolute",
               "steps": [
                 {
                   "color": "green",
                   "value": null
-                }
-              ]
-            },
-            "unit": "opm"
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Error %"
-              },
-              "properties": [
+                },
                 {
-                  "id": "unit",
-                  "value": "percent"
+                  "color": "red",
+                  "value": 80
                 }
               ]
             }
-          ]
+          },
+          "overrides": []
         },
         "gridPos": {
-          "h": 13,
-          "w": 19,
+          "h": 9,
+          "w": 12,
           "x": 0,
           "y": 0
         },
-        "id": 1,
+        "id": 2,
         "options": {
-          "cellHeight": "sm",
-          "footer": {
-            "countRows": false,
-            "fields": "",
-            "reducer": [
-              "sum"
-            ],
-            "show": false
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom"
           },
-          "showHeader": true,
-          "sortBy": []
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
         },
-        "pluginVersion": "10.1.0",
         "targets": [
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "prometheus"
+              "type": "datasource",
+              "uid": "grafana"
             },
-            "editorMode": "code",
-            "exemplar": false,
-            "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\"}[$__range])))*60",
-            "format": "table",
-            "instant": true,
-            "legendFormat": "__auto",
-            "range": false,
-            "refId": "http_requests_rate"
+            "queryType": "randomWalk",
+            "refId": "A"
           },
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "prometheus"
+              "type": "datasource",
+              "uid": "grafana"
             },
-            "editorMode": "code",
-            "exemplar": false,
-            "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\", status=~\"5..\"}[$__range])))*60",
-            "format": "table",
             "hide": false,
-            "instant": true,
-            "legendFormat": "__auto",
-            "range": false,
-            "refId": "5xx errors rate"
+            "queryType": "measurements",
+            "refId": "B"
           },
           {
             "datasource": {
-              "type": "prometheus",
-              "uid": "prometheus"
+              "type": "datasource",
+              "uid": "grafana"
             },
-            "editorMode": "code",
-            "exemplar": false,
-            "expr": "(sum by(application_name) (rate(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\", status=~\"4..\"}[$__range])))*60",
-            "format": "table",
             "hide": false,
-            "instant": true,
-            "legendFormat": "__auto",
-            "range": false,
-            "refId": "4xx errors rate"
-          },
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "prometheus"
-            },
-            "editorMode": "code",
-            "exemplar": false,
-            "expr": "100 -(((sum by(application_name) (increase(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\", status=~\"2..\"}[$__range])))/(sum by(application_name) (increase(http_server_requests_seconds_count{application_name=~\"$application_name\", uri!=\"/liveness\", uri!=\"/readiness\"}[$__range]))))*100)",
-            "format": "table",
-            "hide": false,
-            "instant": true,
-            "legendFormat": "__auto",
-            "range": false,
-            "refId": "2xx requests rate"
+            "queryType": "list",
+            "refId": "C"
           }
         ],
-        "title": "service-health",
-        "transformations": [
-          {
-            "id": "joinByField",
-            "options": {
-              "byField": "application_name",
-              "mode": "outer"
-            }
-          },
-          {
-            "id": "filterFieldsByName",
-            "options": {
-              "include": {
-                "names": [
-                  "application_name",
-                  "Value #http_requests_rate",
-                  "Value #5xx errors rate",
-                  "Value #4xx errors rate",
-                  "Value #2xx requests rate"
-                ]
-              }
-            }
-          },
-          {
-            "id": "organize",
-            "options": {
-              "excludeByName": {},
-              "indexByName": {},
-              "renameByName": {
-                "Value #2xx requests": "2xx Requests Rate",
-                "Value #2xx requests rate": "Error %",
-                "Value #4xx errors": "4xx Errors Rate",
-                "Value #4xx errors rate": "4xx error rate",
-                "Value #5xx errors": "5xx Errors Rate",
-                "Value #5xx errors rate": "5xx error rate",
-                "Value #http_requests_rate": "throughput(http_requests_rate_per_min)",
-                "application_name": "Application Name"
-              }
-            }
-          }
-        ],
-        "type": "table"
+        "title": "Panel Title",
+        "type": "timeseries"
       }
     ],
-    "refresh": "",
-    "schemaVersion": 38,
+    "schemaVersion": 36,
     "style": "dark",
     "tags": [],
     "templating": {
-      "list": [
-        {
-          "hide": 2,
-          "label": "$application_name",
-          "name": "application_name",
-          "query": "conclave|channel-manager|clientmessenger|ota-updatecheck-processor|device-event-google-home|conclave-token-issuer|connectivity-device-compute|connectivity-device-conclave|connectivity-device-store|semantics-api|semantics-data",
-          "skipUrlSync": false,
-          "type": "constant"
-        }
-      ]
+      "list": []
     },
     "time": {
       "from": "now-6h",
@@ -216,8 +145,8 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "service health dashboard",
-    "uid": "b203c814-54af-4524-9cf5-d993786182e0",
-    "version": 9,
+    "title": "New dashboard2",
+    "uid": "KM1AIdQSwq",
+    "version": 1,
     "weekStart": ""
   }
