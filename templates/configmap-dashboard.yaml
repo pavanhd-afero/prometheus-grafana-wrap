@@ -7,14 +7,13 @@ data:
   dashboard1.json: |-
 {{ .Files.Get "files/dashboards/dashboard1.json" | indent 4 }}
   provider.yaml: |-
-  :::
     apiVersion: 1
 
     providers:
       - name: 'a unique provider name'
         orgId: 1
-        folder: 'Infra-Dashboards'  # Name of the folder in Grafana
-        folderUid: ''  # Folder UID, leave empty to auto-generate
+        folder: 'test-folder'  # Name of the folder in Grafana
+        folderUid: 'NJApHOwSz'  # Folder UID, leave empty to auto-generate
         type: file
         disableDeletion: false
         updateIntervalSeconds: 10
